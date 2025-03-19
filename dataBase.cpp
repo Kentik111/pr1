@@ -31,24 +31,51 @@ bool DataBase::addProduct(const string& name) {
 bool DataBase::deleteProduct(const string& name) {
     return products.erase(name) > 0;
 }
-
-bool DataBase::checkProduct(const string& name) {
+bool DataBase::checkProduct(const string& name, const vector<pair<string, bool>>& criteria) {
     auto it = products.find(name);
 
-    if (it != products.end()) {
-        it->second.checked = true;
-        return true;
+    if (it == products.end()) {
+        return false;
     }
 
-    return false;
+    it->second.checked = true;
+    it->second.defective = false;
+    it->second.defects.clear();
+
+    for (const auto& criterion : criteria) {
+        if (!criterion.second) {
+            it->second.defective = true;
+            it->second.defects.push_back(criterion.first);
+        }
+    }
+
+    return true;
 }
 
 void DataBase::printCheckedProducts() {
     cout << "Проверенные продукты:\n";
     for (const auto& pair : products) {
-        if (pair.second.checked) {
+        if (pair.second.checked && !pair.second.defective) {
             cout << "- " << pair.first << "\n";
         }
     }
 }
+
+void DataBase::printDefectiveProducts() {
+    cout << "Бракованные продукты:\n";
+    for (const auto& pair : products) {
+        if (pair.second.checked && pair.second.defective) {
+            cout << "- " << pair.first << " (";
+            for (size_t i = 0; i < pair.second.defects.size(); ++i) {
+                cout << pair.second.defects[i];
+                if (i < pair.second.defects.size() - 1) {
+                    cout << ", ";
+                }
+            }
+            cout << ")\n";
+        }
+    }
+}
+
+
 

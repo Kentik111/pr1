@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -15,6 +16,8 @@ private:
 
     struct Product {
         bool checked;
+        bool defective;
+        vector<string> defects;
     };
 
     unordered_map<string, User> users;
@@ -27,8 +30,9 @@ public:
     bool addProduct(const string& name);
     bool deleteProduct(const string& name);
 
-    bool checkProduct(const string& name);
+    bool checkProduct(const string& name, const vector<pair<string, bool>>& criteria);
     void printCheckedProducts();
+    void printDefectiveProducts();
 };
 
 #endif

@@ -83,7 +83,21 @@ void Server::checkProduct() {
     cout << "Введите название продукта для проверки: ";
     cin >> productName;
 
-    if (database.checkProduct(productName)) {
+    bool expired;
+    cout << "Истек ли срок годности? (1 - да, 0 - нет): ";
+    cin >> expired;
+
+    bool damagedPackaging;
+    cout << "Повреждена ли упаковка? (1 - да, 0 - нет): ";
+    cin >> damagedPackaging;
+
+
+    vector<pair<string, bool>> criteria = {
+        {"Срок годности истек", !expired},
+        {"Упаковка повреждена", !damagedPackaging}
+    };
+
+    if (database.checkProduct(productName, criteria)) {
         cout << "Продукт проверен.\n";
     } else {
         cout << "Продукт не найден.\n";
@@ -95,6 +109,7 @@ void Server::listCheckedProducts() {
         cout << "Сначала войдите в систему.\n";
         return;
     }
-
     database.printCheckedProducts();
+    database.printDefectiveProducts();
 }
+
